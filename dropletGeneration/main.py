@@ -17,7 +17,7 @@ from render import renderImages
 volume0=5
 rneedle=0.5
 
-sigma = np.array([40])
+sigma = np.array([range(30,81)])
 
 # Loop over different values for sigma
 for i in range(0,len(sigma)):
