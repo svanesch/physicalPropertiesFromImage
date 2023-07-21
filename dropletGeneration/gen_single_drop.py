@@ -1,7 +1,5 @@
-# import bpy        # Requires-Python >=3.7, <3.8
 import math as m
 import numpy as np 
-# import matplotlib.pyplot as plt
 import warnings
 import bpy
 import os
