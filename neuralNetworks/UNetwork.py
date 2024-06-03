@@ -5,6 +5,8 @@ class UNet(nn.Module):
     def __init__(self):
         super(UNet, self).__init__()
 
+        self.ReLU = nn.ReLU()
+
         # Encoder (downsampling path)
         self.enc_conv1 = nn.Conv2d(3, 64, kernel_size=3, padding=1)
         self.enc_conv2 = nn.Conv2d(64, 64, kernel_size=3, padding=1)
@@ -49,46 +51,46 @@ class UNet(nn.Module):
 
     def forward(self, x):
         # Encoder (downsampling path)
-        enc1 = nn.ReLU()(self.enc_conv1(x))
-        enc2 = nn.ReLU()(self.enc_conv2(enc1))
+        enc1 = self.ReLU(self.enc_conv1(x))
+        enc2 = self.ReLU(self.enc_conv2(enc1))
         enc2_pool = self.enc_pool1(enc2)
 
-        enc3 = nn.ReLU()(self.enc_conv3(enc2_pool))
-        enc4 = nn.ReLU()(self.enc_conv4(enc3))
+        enc3 = self.ReLU(self.enc_conv3(enc2_pool))
+        enc4 = self.ReLU(self.enc_conv4(enc3))
         enc4_pool = self.enc_pool2(enc4)
 
-        enc5 = nn.ReLU()(self.enc_conv5(enc4_pool))
-        enc6 = nn.ReLU()(self.enc_conv6(enc5))
+        enc5 = self.ReLU(self.enc_conv5(enc4_pool))
+        enc6 = self.ReLU(self.enc_conv6(enc5))
         enc6_pool = self.enc_pool3(enc6)
 
-        enc7 = nn.ReLU()(self.enc_conv7(enc6_pool))
-        enc8 = nn.ReLU()(self.enc_conv8(enc7))
+        enc7 = self.ReLU(self.enc_conv7(enc6_pool))
+        enc8 = self.ReLU(self.enc_conv8(enc7))
         enc8_pool = self.enc_pool4(enc8)
 
         # Bottleneck
-        bottleneck = nn.ReLU()(self.bottleneck_conv1(enc8_pool))
-        bottleneck = nn.ReLU()(self.bottleneck_conv2(bottleneck))
+        bottleneck = self.ReLU(self.bottleneck_conv1(enc8_pool))
+        bottleneck = self.ReLU(self.bottleneck_conv2(bottleneck))
 
         # Decoder (upsampling path)
         dec1 = self.dec_upsample1(bottleneck)
         dec1 = torch.cat([dec1, enc8], dim=1)
-        dec1 = nn.ReLU()(self.dec_conv1(dec1))
-        dec1 = nn.ReLU()(self.dec_conv2(dec1))
+        dec1 = self.ReLU(self.dec_conv1(dec1))
+        dec1 = self.ReLU(self.dec_conv2(dec1))
 
         dec2 = self.dec_upsample2(dec1)
         dec2 = torch.cat([dec2, enc6], dim=1)
-        dec2 = nn.ReLU()(self.dec_conv3(dec2))
-        dec2 = nn.ReLU()(self.dec_conv4(dec2))
+        dec2 = self.ReLU(self.dec_conv3(dec2))
+        dec2 = self.ReLU(self.dec_conv4(dec2))
 
         dec3 = self.dec_upsample3(dec2)
         dec3 = torch.cat([dec3, enc4], dim=1)
-        dec3 = nn.ReLU()(self.dec_conv5(dec3))
-        dec3 = nn.ReLU()(self.dec_conv6(dec3))
+        dec3 = self.ReLU(self.dec_conv5(dec3))
+        dec3 = self.ReLU(self.dec_conv6(dec3))
 
         dec4 = self.dec_upsample4(dec3)
         dec4 = torch.cat([dec4, enc2], dim=1)
-        dec4 = nn.ReLU()(self.dec_conv7(dec4))
-        dec4 = nn.ReLU()(self.dec_conv8(dec4))
+        dec4 = self.ReLU(self.dec_conv7(dec4))
+        dec4 = self.ReLU(self.dec_conv8(dec4))
 
         # Output
         output = self.output_conv(dec4)
